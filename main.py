@@ -66,7 +66,6 @@ class MainHandler(webapp2.RequestHandler):
         self.response.write(content)
 
     def post(self):
-
         content = """
         <h1>Signup</h1>
         <form method = 'post'>
@@ -139,21 +138,20 @@ class MainHandler(webapp2.RequestHandler):
 
         all_elements = user_error_element + pass_error_element + verify_error_element + email_error_element
         if all_elements == "":
-            self.redirect("/here")
+            self.redirect("/welcome")
         else:
             self.response.write(content.format(username, user_error_element, pass_error_element, verify_error_element, email, email_error_element))
 
 
 class Welcome(webapp2.RequestHandler):
     def get(self):
-        content = build_page("")
         username = self.request.get("username")
-        hello = "Welcome" + username
+        hello = "<h2><strong>Welcome!</strong></h2>"
         self.response.write(hello)
 
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
-    ('/here', Welcome),
+    ('/welcome', Welcome),
     #('/validate', Validate)
 ], debug=True)
