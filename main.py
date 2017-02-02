@@ -18,6 +18,9 @@ import webapp2
 import cgi
 import re
 
+
+
+
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 def valid_username(username):
     return USER_RE.match(username)
@@ -34,10 +37,24 @@ def build_page(textarea_content):
     header = "<h1>Signup</h1>"
     signup_form = """
     <form method = 'post'>
-      <label>Username: <input name="username"/></label></br>
-      <label>Password: <input type="password" name="password"/></label></br>
-      <label>Verify Password: <input type="password" name="verifypassword"/></label></br>
-      <label>Email: <input type="text" name="email"/> </label></br>
+        <table>
+        <tbody>
+            <td><label>Username: </td>
+            <td><input type = "text" name="username"></label></td>
+        </tbody>
+        <tbody>
+            <td><label>Password: </td>
+            <td><input type="password" name="password"/></label></td>
+        </tbody>
+        <tbody>
+            <td><label>Verify Password:</td>
+            <td> <input type="password" name="verifypassword"/></label></td>
+        </tbody>
+        <tbody>
+            <td><label>Email: </td>
+            <td><input type="text" name="email"></label></td>
+        </tbody>
+        </table>
     <input type="submit" name="Submit"/>
     </form>
         """
@@ -48,15 +65,33 @@ class MainHandler(webapp2.RequestHandler):
         content = build_page("")
         self.response.write(content)
 
-
     def post(self):
+
         content = """
         <h1>Signup</h1>
         <form method = 'post'>
-            <label>Username: <input type = "text" name="username" value = "{}"></label>{}</br>
-            <label>Password: <input type="password" name="password"/></label>{}</br>
-            <label>Verify Password: <input type="password" name="verifypassword"/></label>{}</br>
-            <label>Email: <input type="text" name="email" value = "{}"> </label>{}</br>
+            <table>
+            <tbody>
+                <td><label>Username: </td>
+                <td><input type = "text" name="username" value = "{}"></label></td>
+                <td>{}</td>
+            </tbody>
+            <tbody>
+                <td><label>Password: </td>
+                <td><input type="password" name="password"/></label></td>
+                <td>{}</td>
+            </tbody>
+            <tbody>
+                <td><label>Verify Password:</td>
+                <td> <input type="password" name="verifypassword"/></label></td>
+                <td>{}</td></tbody>
+            </tbody>
+            <tbody>
+                <td><label>Email: </td>
+                <td><input type="text" name="email" value = "{}"></label></td>
+                <td>{}</td>
+            </tbody>
+            </table>
         <input type="submit" name="Submit"/>
         </form>
             """
