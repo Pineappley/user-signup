@@ -138,7 +138,7 @@ class MainHandler(webapp2.RequestHandler):
 
         all_elements = user_error_element + pass_error_element + verify_error_element + email_error_element
         if all_elements == "":
-            self.redirect("/welcome")
+            self.redirect("/welcome?username=" + username)
         else:
             self.response.write(content.format(username, user_error_element, pass_error_element, verify_error_element, email, email_error_element))
 
@@ -146,7 +146,7 @@ class MainHandler(webapp2.RequestHandler):
 class Welcome(webapp2.RequestHandler):
     def get(self):
         username = self.request.get("username")
-        hello = "<h2><strong>Welcome!</strong></h2>"
+        hello = "Welcome " + username
         self.response.write(hello)
 
 
