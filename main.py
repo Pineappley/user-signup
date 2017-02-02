@@ -30,78 +30,91 @@ EMAIL_RE = re.compile(r"^[\S]+@[\S]+.[\S]+$")
 def valid_email(email):
     return EMAIL_RE.match(email)
 
+def build_page(textarea_content):
+    header = "<h1>Signup</h1>"
+    signup_form = """
+    <form method = 'post'>
+      <label>Username: <input name="username"/></label></br>
+      <label>Password: <input type="password" name="password"/></label></br>
+      <label>Verify Password: <input type="password" name="verifypassword"/></label></br>
+      <label>Email: <input type="text" name="email"/> </label></br>
+    <input type="submit" name="Submit"/>
+    </form>
+        """
+    return header + signup_form
+
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        header = """
-        <h1>Signup</h1>
-        <form method = 'post'>
-            <label>Username: <input name="username" /> </label></br>
-            <label>Password: <input type="password" name="password"/></label></br>
-            <label>Verify Password: <input type="password" name="password"/></label></br>
-            <label>Email: <input type="text" name="email"/> </label></br>
-        <input type="submit" name="Submit"/>
-        </form>
-            """
-        self.response.write(header)
+        content = build_page("")
+        self.response.write(content)
 
 
     def post(self):
-        header = """
+        content = """
         <h1>Signup</h1>
         <form method = 'post'>
-            <label>Username: <input name="username"/></label>{}</br>
+            <label>Username: <input type = "text" name="username" value = "{}"></label>{}</br>
             <label>Password: <input type="password" name="password"/></label>{}</br>
             <label>Verify Password: <input type="password" name="verifypassword"/></label>{}</br>
-            <label>Email: <input type="text" name="email"/> </label>{}</br>
+            <label>Email: <input type="text" name="email" value = "{}"> </label>{}</br>
         <input type="submit" name="Submit"/>
         </form>
             """
-
         username = self.request.get("username")
-        if valid_username(username) == None:
+        if username == "":
+            error = "Please enter a username."
+            user_error_element = "<p class='error'>" + cgi.escape(error, quote=True) + "</p>"
+        elif valid_username(username) == None:
             error = "This is not a valid username."
             user_error_element = "<p class='error'>" + cgi.escape(error, quote=True) + "</p>"
         else:
+            username = username
             user_error_element = ""
 
         password = self.request.get("password")
-        if valid_password(password) == None:
+        if password == "":
+            error = "Please enter a password."
+            pass_error_element = "<p class='error'>" + cgi.escape(error, quote=True) + "</p>"
+        elif valid_password(password) == None:
             error = "This is not a valid password."
             pass_error_element = "<p class='error'>" + cgi.escape(error, quote=True) + "</p>"
         else:
             pass_error_element = ""
 
         verifypassword = self.request.get("verifypassword")
-        if verifypassword == password:
+        if verifypassword == "":
+            error = "Please verify your password."
+            verify_error_element = "<p class='error'>" + cgi.escape(error, quote=True) + "</p>"
+        elif verifypassword == password:
             verify_error_element = ""
         else:
             error = "Your passwords do not match."
             verify_error_element = "<p class='error'>" + cgi.escape(error, quote=True) + "</p>"
 
         email = self.request.get("email")
-        if valid_email(email) == None:
+        if email == "":
+            error = "Please enter your email."
+            email_error_element = "<p class='error'>" + cgi.escape(error, quote=True) + "</p>"
+        elif valid_email(email) == None:
             error = "This is not a valid email."
             email_error_element = "<p class='error'>" + cgi.escape(error, quote=True) + "</p>"
-        else: email_error_element = ""
+        else:
+            email = email
+            email_error_element = ""
 
         all_elements = user_error_element + pass_error_element + verify_error_element + email_error_element
         if all_elements == "":
             self.redirect("/here")
         else:
-            self.response.write(header.format(user_error_element, pass_error_element, verify_error_element, email_error_element))
+            self.response.write(content.format(username, user_error_element, pass_error_element, verify_error_element, email, email_error_element))
 
-
-        # username = self.request.get("username")
-        # for i in username:
-        #     if i == " ":
-        #         error = "Please enter a valid username"
-        #         error_escaped = cgi.escape(error, quote=True)
-        #         # redirect to homepage, and include error as a query parameter in the URL
-        #         self.redirect("/?error=" + error_escaped)
 
 class Welcome(webapp2.RequestHandler):
     def get(self):
-        self.response.write("Welcome to my temporary success celebration page!")
+        content = build_page("")
+        username = self.request.get("username")
+        hello = "Welcome" + username
+        self.response.write(hello)
 
 
 app = webapp2.WSGIApplication([
