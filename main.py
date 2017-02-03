@@ -29,7 +29,7 @@ PASS_RE = re.compile(r"^.{3,20}$")
 def valid_password(password):
     return PASS_RE.match(password)
 
-EMAIL_RE = re.compile(r"^[\S]+@[\S]+.[\S]+$")
+EMAIL_RE = re.compile(r"^[\S]+@[\S]+\.[\S]+$")
 def valid_email(email):
     return EMAIL_RE.match(email)
 
@@ -127,8 +127,7 @@ class MainHandler(webapp2.RequestHandler):
 
         email = self.request.get("email")
         if email == "":
-            error = "Please enter your email."
-            email_error_element = "<p class='error'>" + cgi.escape(error, quote=True) + "</p>"
+            email_error_element = ""
         elif valid_email(email) == None:
             error = "This is not a valid email."
             email_error_element = "<p class='error'>" + cgi.escape(error, quote=True) + "</p>"
